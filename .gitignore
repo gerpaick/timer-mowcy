@@ -1,0 +1,29 @@
+# Flutter / Dart
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/.pub-cache/
+**/.pub/
+**/build/
+**/coverage/
+**/generated_plugin_registrant.dart
+**/.flutter_export_environment.sh
+**/ephemeral/
+**/Generated.xcconfig
+
+# IDE - IntelliJ / Android Studio
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# IDE - VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.log
