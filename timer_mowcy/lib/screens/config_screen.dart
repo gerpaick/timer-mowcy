@@ -2,15 +2,21 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import '../l10n/app_localizations.dart';
 import '../models/timer_tile.dart';
 import '../services/storage_service.dart';
+import '../widgets/config_settings_section.dart';
+import '../widgets/config_tile_form.dart';
+import '../widgets/config_tile_list.dart';
 
-// Ekran konfiguracji kafelków minutników
+// Ekran konfiguracji kafelków minutnika.
+//
+// Po refaktoryzacji ekran jest orchestratorem: przechowuje stan ustawień
+// i listy kafelków oraz deleguje renderowanie do wyspecjalizowanych widgetów
+// (ConfigSettingsSection, ConfigTileForm, ConfigTileList).
 class ConfigScreen extends StatefulWidget {
   final VoidCallback? onThemeChanged;
-  
+
   const ConfigScreen({super.key, this.onThemeChanged});
 
   @override
@@ -25,26 +31,21 @@ class _ConfigScreenState extends State<ConfigScreen> {
   bool _showResetButton = true;
   bool _showPauseButton = true;
 
-  // Formularz dodawania nowego kafelka
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _minutesController = TextEditingController();
-  Color _selectedColor = Colors.blue;
-
   @override
   void initState() {
     super.initState();
     _loadData();
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _minutesController.dispose();
-    super.dispose();
+  // Wyświetl SnackBar (zabezpieczony sprawdzaniem `mounted`).
+  void _snackbar(String message, {Duration duration = const Duration(seconds: 1)}) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), duration: duration),
+    );
   }
 
-  // Załaduj kafelki i ustawienia wibracji
+  // Załaduj kafelki i ustawienia
   Future<void> _loadData() async {
     setState(() {
       _isLoading = true;
@@ -73,38 +74,18 @@ class _ConfigScreenState extends State<ConfigScreen> {
 
   // Zapisz ustawienie widoczności przycisku Reset
   Future<void> _saveShowResetButton(bool show) async {
+    final msg = AppLocalizations.of(context)!;
     await StorageService.saveShowResetButton(show);
-    setState(() {
-      _showResetButton = show;
-    });
-
-    if (mounted) {
-      final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(show ? l10n.resetButtonVisible : l10n.resetButtonHidden),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
+    setState(() => _showResetButton = show);
+    _snackbar(show ? msg.resetButtonVisible : msg.resetButtonHidden);
   }
 
   // Zapisz ustawienie widoczności przycisku Pauza
   Future<void> _saveShowPauseButton(bool show) async {
+    final msg = AppLocalizations.of(context)!;
     await StorageService.saveShowPauseButton(show);
-    setState(() {
-      _showPauseButton = show;
-    });
-
-    if (mounted) {
-      final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(show ? l10n.pauseButtonVisible : l10n.pauseButtonHidden),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
+    setState(() => _showPauseButton = show);
+    _snackbar(show ? msg.pauseButtonVisible : msg.pauseButtonHidden);
   }
 
   // Zapisz zmiany i odśwież listę
@@ -127,38 +108,23 @@ class _ConfigScreenState extends State<ConfigScreen> {
     await _loadData();
   }
 
-  // Dodaj nowy kafelek
-  Future<void> _addTile() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
+  // Adapter: formularz przekazuje zwalidowane dane, rodzic realizuje logikę
+  // dodawania (limit 10 kafelków, duplikaty, zapis, powiadomienie).
+  Future<void> _addTileFromForm({
+    required String name,
+    required int durationSeconds,
+    required int colorValue,
+  }) async {
+    final l10n = AppLocalizations.of(context)!;
 
     if (_tiles.length >= 10) {
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.maxTilesError),
-          ),
-        );
-      }
+      _snackbar(l10n.maxTilesError);
       return;
     }
-
-    final name = _nameController.text.trim();
-    final minutes = int.tryParse(_minutesController.text) ?? 0;
-    final durationSeconds = minutes * 60;
 
     // Sprawdź czy kafelek z tym samym czasem już istnieje
     if (_tiles.any((tile) => tile.durationSeconds == durationSeconds)) {
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.duplicateTimeError),
-          ),
-        );
-      }
+      _snackbar(l10n.duplicateTimeError);
       return;
     }
 
@@ -166,7 +132,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: name,
       durationSeconds: durationSeconds,
-      colorValue: _selectedColor.toARGB32(),
+      colorValue: colorValue,
     );
 
     setState(() {
@@ -175,43 +141,30 @@ class _ConfigScreenState extends State<ConfigScreen> {
     });
 
     await _saveAndRefresh();
-
-    // Wyczyść formularz
-    _nameController.clear();
-    _minutesController.clear();
-    _selectedColor = Colors.blue;
-
-    if (mounted) {
-      final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.tileAdded),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
+    _snackbar(l10n.tileAdded);
   }
 
-  // Usuń kafelek
+  // Usuń kafelek (z potwierdzeniem)
   Future<void> _deleteTile(String tileId) async {
+    final l10n = AppLocalizations.of(context)!;
     final tile = _tiles.firstWhere((t) => t.id == tileId);
 
     // Potwierdzenie usunięcia
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
+        final loc = AppLocalizations.of(context)!;
         return AlertDialog(
-          title: Text(l10n.deleteTileTitle),
-          content: Text(l10n.deleteTileConfirm(tile.name)),
+          title: Text(loc.deleteTileTitle),
+          content: Text(loc.deleteTileConfirm(tile.name)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text(l10n.cancel),
+              child: Text(loc.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text(l10n.delete),
+              child: Text(loc.delete),
             ),
           ],
         );
@@ -219,91 +172,27 @@ class _ConfigScreenState extends State<ConfigScreen> {
     );
 
     if (confirm == true) {
-      setState(() {
-        _tiles.removeWhere((t) => t.id == tileId);
-      });
+      setState(() => _tiles.removeWhere((t) => t.id == tileId));
       await _saveAndRefresh();
-
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.tileDeleted),
-            duration: const Duration(seconds: 1),
-          ),
-        );
-      }
+      _snackbar(l10n.tileDeleted);
     }
-  }
-
-  // Pokaż wybór koloru
-  Future<void> _showColorPicker() async {
-    await showDialog(
-      context: context,
-      builder: (context) {
-        final l10n = AppLocalizations.of(context)!;
-        return AlertDialog(
-          title: Text(l10n.pickColorTitle),
-          content: SingleChildScrollView(
-            child: BlockPicker(
-              pickerColor: _selectedColor,
-              onColorChanged: (color) {
-                setState(() {
-                  _selectedColor = color;
-                });
-              },
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text(l10n.done),
-            ),
-          ],
-        );
-      },
-    );
   }
 
   // Zapisz ustawienie wibracji
   Future<void> _saveVibrationSetting(bool enabled) async {
+    final msg = AppLocalizations.of(context)!;
     await StorageService.saveVibrationEnabled(enabled);
-    setState(() {
-      _vibrationEnabled = enabled;
-    });
-
-    if (mounted) {
-      final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(enabled ? l10n.vibrationEnabled : l10n.vibrationDisabled),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
+    setState(() => _vibrationEnabled = enabled);
+    _snackbar(enabled ? msg.vibrationEnabled : msg.vibrationDisabled);
   }
 
   // Zapisz ustawienie motywu
   Future<void> _saveThemeSetting(String themeMode) async {
+    final msg = AppLocalizations.of(context)!;
     await StorageService.saveThemeMode(themeMode);
-    setState(() {
-      _themeMode = themeMode;
-    });
-
-    // Wywołaj callback do odświeżenia motywu
-    if (widget.onThemeChanged != null) {
-      widget.onThemeChanged!();
-    }
-
-    if (mounted) {
-      final l10n = AppLocalizations.of(context)!;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(l10n.themeSaved),
-          duration: const Duration(seconds: 1),
-        ),
-      );
-    }
+    setState(() => _themeMode = themeMode);
+    widget.onThemeChanged?.call(); // Odśwież motyw w całej aplikacji
+    _snackbar(msg.themeSaved);
   }
 
   @override
@@ -326,262 +215,25 @@ class _ConfigScreenState extends State<ConfigScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Sekcja ustawień
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.settingsTitle,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          SwitchListTile(
-                            title: Text(l10n.vibrationToggleTitle),
-                            subtitle: Text(l10n.vibrationToggleSubtitle),
-                            value: _vibrationEnabled,
-                            onChanged: _saveVibrationSetting,
-                          ),
-                          const SizedBox(height: 8),
-                          // Wybór motywu
-                          DropdownButtonFormField<String>(
-                            initialValue: _themeMode,
-                            decoration: InputDecoration(
-                              labelText: l10n.themeModeLabel,
-                              border: const OutlineInputBorder(),
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                value: 'light',
-                                child: Text(l10n.themeLight),
-                              ),
-                              DropdownMenuItem(
-                                value: 'dark',
-                                child: Text(l10n.themeDark),
-                              ),
-                              DropdownMenuItem(
-                                value: 'system',
-                                child: Text(l10n.themeSystem),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              if (value != null) {
-                                _saveThemeSetting(value);
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                  ConfigSettingsSection(
+                    vibrationEnabled: _vibrationEnabled,
+                    onVibrationChanged: _saveVibrationSetting,
+                    themeMode: _themeMode,
+                    onThemeModeChanged: _saveThemeSetting,
+                    showResetButton: _showResetButton,
+                    onShowResetButtonChanged: _saveShowResetButton,
+                    showPauseButton: _showPauseButton,
+                    onShowPauseButtonChanged: _saveShowPauseButton,
                   ),
                   const SizedBox(height: 24),
-
-                  // Sekcja widoczności przycisków
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.buttonVisibilityTitle,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            l10n.buttonVisibilitySubtitle,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          SwitchListTile(
-                            title: Text(l10n.showResetButton),
-                            subtitle: Text(l10n.showResetButtonSubtitle),
-                            value: _showResetButton,
-                            onChanged: _saveShowResetButton,
-                          ),
-                          SwitchListTile(
-                            title: Text(l10n.showPauseButton),
-                            subtitle: Text(l10n.showPauseButtonSubtitle),
-                            value: _showPauseButton,
-                            onChanged: _saveShowPauseButton,
-                          ),
-                          const Divider(),
-                          ListTile(
-                            leading: const Icon(Icons.info_outline, color: Colors.blue),
-                            title: Text(
-                              l10n.stopAlwaysVisible,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                            dense: true,
-                          ),
-                        ],
-                      ),
-                    ),
+                  ConfigTileForm(
+                    currentTileCount: _tiles.length,
+                    onAddTile: _addTileFromForm,
                   ),
                   const SizedBox(height: 24),
-
-                  // Sekcja formularza dodawania kafelka
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              l10n.addNewTileTitle,
-                              style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _nameController,
-                              decoration: InputDecoration(
-                                labelText: l10n.tileName,
-                                hintText: l10n.tileNameHint,
-                                border: const OutlineInputBorder(),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return l10n.tileNameRequired;
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _minutesController,
-                              decoration: InputDecoration(
-                                labelText: l10n.tileDuration,
-                                hintText: l10n.tileDurationHint,
-                                border: const OutlineInputBorder(),
-                              ),
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.trim().isEmpty) {
-                                  return l10n.tileDurationRequired;
-                                }
-                                final minutes = int.tryParse(value);
-                                if (minutes == null || minutes < 1 || minutes > 60) {
-                                  return l10n.tileDurationRange;
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            // Wybór koloru
-                            ListTile(
-                              title: Text(l10n.colorLabel),
-                              trailing: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: _selectedColor,
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                              onTap: _showColorPicker,
-                            ),
-                            const SizedBox(height: 16),
-                            SizedBox(
-                              width: double.infinity,
-                              child: ElevatedButton(
-                                onPressed: _addTile,
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                ),
-                                child: Text(l10n.addTileButton),
-                              ),
-                            ),
-                            if (_tiles.length >= 10)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 8),
-                                child: Text(
-                                  l10n.maxTilesReached,
-                                  style: TextStyle(
-                                    color: Theme.of(context).colorScheme.error,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Lista kafelków
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            l10n.tileListTitle(_tiles.length),
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          if (_tiles.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.all(16),
-                              child: Center(
-                                child: Text(
-                                  l10n.tileListEmpty,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            )
-                          else
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: _tiles.length,
-                              itemBuilder: (context, index) {
-                                final tile = _tiles[index];
-                                return ListTile(
-                                  leading: Container(
-                                    width: 40,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: Color(tile.colorValue),
-                                      shape: BoxShape.circle,
-                                    ),
-                                  ),
-                                  title: Text(tile.name),
-                                  subtitle: Text(tile.formattedTime),
-                                  trailing: IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.red),
-                                    onPressed: () => _deleteTile(tile.id),
-                                  ),
-                                );
-                              },
-                            ),
-                        ],
-                      ),
-                    ),
+                  ConfigTileList(
+                    tiles: _tiles,
+                    onDeleteTile: _deleteTile,
                   ),
                 ],
               ),
