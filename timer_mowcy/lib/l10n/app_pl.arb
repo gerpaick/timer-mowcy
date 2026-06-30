@@ -1,0 +1,86 @@
+{
+  "@@locale": "pl",
+
+  "appTitle": "TimerMówcy",
+  "@appTitle": {"description": "App name displayed in MaterialApp title"},
+
+  "stopwatch": "STOPER",
+  "config": "Konfiguracja",
+  "back": "Wróć",
+  "settingsTooltip": "Konfiguracja",
+  "settingsHint": "Dodaj lub usuń kafelki minutników",
+
+  "noTiles": "Brak kafelków",
+  "addTilesButton": "Dodaj kafelki",
+
+  "settingsTitle": "Ustawienia",
+  "vibrationToggleTitle": "Wibracje przy przekroczeniu czasu",
+  "vibrationToggleSubtitle": "Wibracja przy osiągnięciu 00:00",
+  "themeModeLabel": "Motyw aplikacji",
+  "themeLight": "Jasny",
+  "themeDark": "Ciemny",
+  "themeSystem": "Systemowy",
+
+  "buttonVisibilityTitle": "Widoczność przycisków",
+  "buttonVisibilitySubtitle": "Kontroluj, które przyciski są widoczne w ekranach stopera i minutnika",
+  "showResetButton": "Pokaż przycisk Reset",
+  "showResetButtonSubtitle": "Przycisk rozpoczęcia odliczania od nowa",
+  "showPauseButton": "Pokaż przycisk Pauza",
+  "showPauseButtonSubtitle": "Przycisk wstrzymania/wznowienia odliczania",
+  "stopAlwaysVisible": "Przycisk Stop jest zawsze widoczny",
+
+  "addNewTileTitle": "Dodaj nowy kafelek",
+  "tileName": "Nazwa",
+  "tileNameHint": "np. 5 MIN",
+  "tileDuration": "Czas (w minutach)",
+  "tileDurationHint": "np. 5",
+  "colorLabel": "Kolor",
+  "addTileButton": "Dodaj kafelek",
+  "tileNameRequired": "Podaj nazwę kafelka",
+  "tileDurationRequired": "Podaj czas w minutach",
+  "tileDurationRange": "Czas musi być między 1 a 60 minut",
+  "maxTilesReached": "Osiągnięto maksymalną liczbę kafelków (10)",
+
+  "tileListTitle": "Lista kafelków ({count}/10)",
+  "@tileListTitle": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "tileListEmpty": "Brak kafelków minutników",
+
+  "maxTilesError": "Maksymalnie 10 kafelków minutników",
+  "duplicateTimeError": "Kafelek z tym czasem już istnieje",
+  "tileAdded": "Kafelek dodany",
+  "tileDeleted": "Kafelek usunięty",
+  "vibrationEnabled": "Wibracje włączone",
+  "vibrationDisabled": "Wibracje wyłączone",
+  "themeSaved": "Motyw zapisany",
+  "resetButtonVisible": "Przycisk Reset widoczny",
+  "resetButtonHidden": "Przycisk Reset ukryty",
+  "pauseButtonVisible": "Przycisk Pauza widoczny",
+  "pauseButtonHidden": "Przycisk Pauza ukryty",
+
+  "deleteTileTitle": "Usuń kafelek?",
+  "deleteTileConfirm": "Czy na pewno chcesz usunąć kafelek \"{name}\"?",
+  "@deleteTileConfirm": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "cancel": "Anuluj",
+  "delete": "Usuń",
+
+  "pickColorTitle": "Wybierz kolor",
+  "done": "Gotowe",
+
+  "reset": "Reset",
+  "pause": "Pauza",
+  "resume": "Wznów",
+  "stop": "Stop",
+
+  "resetTooltip": "Rozpocznij odliczanie od nowa",
+  "pauseTooltip": "Zatrzymaj odliczanie",
+  "resumeTooltip": "Wznów odliczanie",
+  "stopTooltip": "Zatrzymaj i wróć do menu głównego"
+}

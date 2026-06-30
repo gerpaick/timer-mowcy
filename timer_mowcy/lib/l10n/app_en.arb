@@ -1,0 +1,75 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "SpeakerTimer",
+
+  "stopwatch": "STOPWATCH",
+  "config": "Settings",
+  "back": "Back",
+  "settingsTooltip": "Settings",
+  "settingsHint": "Add or remove timer tiles",
+
+  "noTiles": "No tiles",
+  "addTilesButton": "Add tiles",
+
+  "settingsTitle": "Settings",
+  "vibrationToggleTitle": "Vibrate when time is up",
+  "vibrationToggleSubtitle": "Vibrate when timer reaches 00:00",
+  "themeModeLabel": "App theme",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "themeSystem": "System",
+
+  "buttonVisibilityTitle": "Button visibility",
+  "buttonVisibilitySubtitle": "Control which buttons are visible on the timer and stopwatch screens",
+  "showResetButton": "Show Reset button",
+  "showResetButtonSubtitle": "Restart the countdown",
+  "showPauseButton": "Show Pause button",
+  "showPauseButtonSubtitle": "Pause/resume the countdown",
+  "stopAlwaysVisible": "Stop button is always visible",
+
+  "addNewTileTitle": "Add new tile",
+  "tileName": "Name",
+  "tileNameHint": "e.g. 5 MIN",
+  "tileDuration": "Duration (minutes)",
+  "tileDurationHint": "e.g. 5",
+  "colorLabel": "Color",
+  "addTileButton": "Add tile",
+  "tileNameRequired": "Enter a tile name",
+  "tileDurationRequired": "Enter duration in minutes",
+  "tileDurationRange": "Duration must be between 1 and 60 minutes",
+  "maxTilesReached": "Maximum number of tiles reached (10)",
+
+  "tileListTitle": "Tile list ({count}/10)",
+  "tileListEmpty": "No timer tiles",
+
+  "maxTilesError": "Maximum 10 timer tiles",
+  "duplicateTimeError": "Tile with this duration already exists",
+  "tileAdded": "Tile added",
+  "tileDeleted": "Tile deleted",
+  "vibrationEnabled": "Vibration enabled",
+  "vibrationDisabled": "Vibration disabled",
+  "themeSaved": "Theme saved",
+  "resetButtonVisible": "Reset button visible",
+  "resetButtonHidden": "Reset button hidden",
+  "pauseButtonVisible": "Pause button visible",
+  "pauseButtonHidden": "Pause button hidden",
+
+  "deleteTileTitle": "Delete tile?",
+  "deleteTileConfirm": "Are you sure you want to delete \"{name}\"?",
+  "cancel": "Cancel",
+  "delete": "Delete",
+
+  "pickColorTitle": "Pick a color",
+  "done": "Done",
+
+  "reset": "Reset",
+  "pause": "Pause",
+  "resume": "Resume",
+  "stop": "Stop",
+
+  "resetTooltip": "Restart the countdown",
+  "pauseTooltip": "Pause the countdown",
+  "resumeTooltip": "Resume the countdown",
+  "stopTooltip": "Stop and return to main menu"
+}
