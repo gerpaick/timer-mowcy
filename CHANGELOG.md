@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_No unreleased changes yet._
+### Changed
+
+- Bump `shared_preferences` from 2.5.3 to 2.5.5
+- Bump `cupertino_icons` from 1.0.8 to 1.0.9
+- Bump `flutter_lints` from 5.0.0 to 6.0.0
 
 ## [1.0.0] - 2026-07-01
 
