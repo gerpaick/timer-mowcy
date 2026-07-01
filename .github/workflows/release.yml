@@ -43,20 +43,23 @@ jobs:
       - name: Build split-per-ABI release APKs
         run: flutter build apk --release --split-per-abi
 
-      - name: Generate checksums
+      - name: Generate SHA256 checksums
+        working-directory: timer_mowcy/build/app/outputs/flutter-apk
         run: |
-          cd build/app/outputs/flutter-apk
           sha256sum app-*-release.apk > SHA256SUMS.txt
+          echo "Checksums:"
           cat SHA256SUMS.txt
 
       - name: Upload APKs + checksums to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          # NOTE: paths are relative to repository root (GITHUB_WORKSPACE),
+          # NOT to `defaults.run.working-directory`. Use full timer_mowcy/ prefix.
           files: |
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-release.apk
-            build/app/outputs/flutter-apk/SHA256SUMS.txt
+            timer_mowcy/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+            timer_mowcy/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+            timer_mowcy/build/app/outputs/flutter-apk/app-x86_64-release.apk
+            timer_mowcy/build/app/outputs/flutter-apk/SHA256SUMS.txt
           generate_release_notes: true
           draft: false
           prerelease: false
