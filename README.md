@@ -59,7 +59,7 @@ Open-sourced because privacy-first tools for speakers should be accessible to ev
 
 ### From APK (recommended for end users)
 
-Download the latest APK from [GitHub Releases](TODO-add-URL-when-published).
+Download the latest APK from [GitHub Releases](https://github.com/gerpaick/timer-mowcy).
 
 Install with ADB:
 
@@ -79,7 +79,7 @@ Requirements:
 - Android SDK with `minSdk 24` (Android 7.0+)
 
 ```bash
-git clone TODO-add-URL-when-published
+git clone https://github.com/gerpaick/timer-mowcy
 cd timer-mowcy/timer_mowcy
 flutter pub get
 flutter run

@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _No unreleased changes yet._
 
-## [1.0.0] - 2026-XX-XX
+## [1.0.0] - 2026-07-01
 
 First public release.
 
@@ -49,5 +49,5 @@ First public release.
 - `flutter build apk --release` uses debug signing keys; dedicated signing
   config required before any store submission.
 
-[Unreleased]: TODO-add-URL-when-published/compare/v1.0.0...HEAD
-[1.0.0]: TODO-add-URL-when-published/releases/tag/v1.0.0
+[Unreleased]: https://github.com/gerpaick/timer-mowcy/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gerpaick/timer-mowcy/releases/tag/v1.0.0
