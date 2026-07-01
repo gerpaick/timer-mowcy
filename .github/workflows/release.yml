@@ -53,8 +53,6 @@ jobs:
       - name: Upload APKs + checksums to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          # NOTE: paths are relative to repository root (GITHUB_WORKSPACE),
-          # NOT to `defaults.run.working-directory`. Use full timer_mowcy/ prefix.
           files: |
             timer_mowcy/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
             timer_mowcy/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
