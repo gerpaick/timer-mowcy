@@ -50,7 +50,7 @@ jobs:
 
       - name: Upload coverage
         if: matrix.flutter == '3.35.7'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: timer_mowcy/coverage/
@@ -83,7 +83,7 @@ jobs:
         run: flutter build apk --release --split-per-abi
 
       - name: Upload APK artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-apks
           path: |
