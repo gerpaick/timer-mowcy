@@ -1,7 +1,12 @@
 # TimerMówcy ⏱️
 
 <p align="center">
-  <img src="timer_mowcy/assets/icon_source.png" width="120" alt="TimerMówcy app icon" />
+  <img src="timer_mowcy/assets/icon_source.png" width="100" alt="TimerMówcy app icon" />
+</p>
+
+<p align="center">
+  <strong>Open-source timer + stopwatch for speakers, trainers, and debaters.</strong><br />
+  <em>Works offline. No ads. No accounts. No internet permission.</em>
 </p>
 
 <p align="center">
@@ -12,8 +17,9 @@
   <img alt="Languages" src="https://img.shields.io/badge/i18n-PL%20%2B%20EN-2ea44f" />
 </p>
 
-> Open-source timer + stopwatch for speakers, trainers, and debaters.
-> Works offline. No ads. No accounts. No internet permission.
+<p align="center">
+  <img src="screenshots/main-with-tiles.png" alt="TimerMówcy home screen with timer tiles" width="640" />
+</p>
 
 ## ✨ Features
 
