@@ -28,10 +28,10 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     super.initState();
     // Utwórz kontroler i rozpocznij zliczanie
     _controller = StopwatchController();
-    
+
     // Włącz keep screen on (ekran nie gaśnie)
     WakelockPlus.enable();
-    
+
     // Załaduj ustawienia widoczności przycisków i wystartuj stoper
     _loadSettings();
   }
@@ -40,10 +40,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Wymuszaj full screen za każdym razem gdy ekran się wyświetla
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.immersive,
-      overlays: [],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
   }
 
   @override
@@ -93,7 +90,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
         builder: (context, constraints) {
           // Responsywny layout dla landscape
           final isWide = constraints.maxWidth > 800;
-          
+
           return Row(
             children: [
               // Lewa strona - Przyciski (35% szerokości na małych ekranach)
@@ -117,7 +114,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                   ),
                 ),
               ),
-              
+
               // Prawa strona - Wyświetlacz czasu (65% szerokości na małych ekranach)
               Expanded(
                 flex: isWide ? 3 : 3,

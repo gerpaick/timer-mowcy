@@ -14,7 +14,7 @@ class TimerController extends ChangeNotifier {
   Timer? _timer;
   bool _hasVibrated = false; // czy już wibrowało przy 00:00
   bool _vibrationEnabled = true; // czy wibracje są włączone
-  
+
   // Getters
   TimerState get state => _state;
   int get remainingSeconds => _remainingSeconds;
@@ -29,38 +29,38 @@ class TimerController extends ChangeNotifier {
     if (_timer != null) {
       _timer!.cancel();
     }
-    
+
     _initialSeconds = durationSeconds;
     _remainingSeconds = durationSeconds;
     _state = TimerState.running;
     _hasVibrated = false; // Reset flagi wibracji
     _vibrationEnabled = vibrationEnabled; // Ustaw ustawienie wibracji
-    
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       _remainingSeconds--;
-      
+
       // Wibracja dokładnie przy 00:00 (gdy remainingSeconds staje się 0)
       if (_remainingSeconds == 0 && !_hasVibrated) {
         _triggerVibration(_vibrationEnabled);
         _hasVibrated = true;
       }
-      
+
       notifyListeners();
-      
+
       // Po osiągnięciu zera, kontynuuj zliczanie w dół (ujemne wartości)
       // Nie zatrzymuj - minutnik będzie odliczał przekroczenie czasu
     });
-    
+
     notifyListeners();
   }
-  
+
   // Funkcja wywołująca wibrację (tylko jeśli wibracje są włączone)
   void _triggerVibration(bool vibrationEnabled) async {
     // Sprawdź czy wibracje są włączone
     if (!vibrationEnabled) {
       return;
     }
-    
+
     // Sprawdź czy urządzenie obsługuje wibracje
     final hasVibrator = await Vibration.hasVibrator();
     if (hasVibrator) {
@@ -115,8 +115,7 @@ class TimerController extends ChangeNotifier {
 
 // Stany minutnika
 enum TimerState {
-  idle,    // Początkowy stan, nie działa
+  idle, // Początkowy stan, nie działa
   running, // Odliczanie w toku
-  paused,  // Zatrzymany
+  paused, // Zatrzymany
 }
-

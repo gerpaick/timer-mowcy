@@ -35,13 +35,9 @@ class _TimeDisplayState extends State<TimeDisplay>
     );
 
     // Animacja fade in/out (od 0.5 do 1.0)
-    _animation = Tween<double>(
-      begin: 0.5,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _animation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
     // Uruchom animację w pętli, gdy czas jest przekroczony
     if (widget.isOverdue) {
@@ -100,7 +96,9 @@ class _TimeDisplayState extends State<TimeDisplay>
                 fontWeight: FontWeight.w700,
                 color: displayColor,
                 letterSpacing: 2,
-                fontFeatures: const [FontFeature.tabularFigures()], // Stała szerokość cyfr
+                fontFeatures: const [
+                  FontFeature.tabularFigures(),
+                ], // Stała szerokość cyfr
                 shadows: [
                   Shadow(
                     offset: const Offset(0, 2),
@@ -124,7 +122,9 @@ class _TimeDisplayState extends State<TimeDisplay>
         fontWeight: FontWeight.w700,
         color: displayColor,
         letterSpacing: 2,
-        fontFeatures: const [FontFeature.tabularFigures()], // Stała szerokość cyfr
+        fontFeatures: const [
+          FontFeature.tabularFigures(),
+        ], // Stała szerokość cyfr
         shadows: [
           Shadow(
             offset: const Offset(0, 2),

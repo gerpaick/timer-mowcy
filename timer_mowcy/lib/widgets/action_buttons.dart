@@ -36,7 +36,7 @@ class ActionButtons extends StatelessWidget {
         final fontSize = (constraints.maxWidth * 0.08).clamp(14.0, 18.0);
         final iconSize = (constraints.maxWidth * 0.10).clamp(20.0, 24.0);
         final spacing = (constraints.maxHeight * 0.04).clamp(12.0, 20.0);
-        
+
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -108,38 +108,38 @@ class ActionButtons extends StatelessWidget {
               ),
               SizedBox(height: spacing),
             ],
-          // Przycisk Stop z efektem wciśnięcia i podpowiedzią
-          Tooltip(
-            message: l10n.stopTooltip,
-            child: SizedBox(
-              width: buttonWidth,
-              height: buttonHeight,
-              child: ElevatedButton.icon(
-                onPressed: onStop,
-                icon: Icon(Icons.stop, size: iconSize),
-                label: Text(
-                  l10n.stop,
-                  style: TextStyle(
-                    fontSize: fontSize,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
+            // Przycisk Stop z efektem wciśnięcia i podpowiedzią
+            Tooltip(
+              message: l10n.stopTooltip,
+              child: SizedBox(
+                width: buttonWidth,
+                height: buttonHeight,
+                child: ElevatedButton.icon(
+                  onPressed: onStop,
+                  icon: Icon(Icons.stop, size: iconSize),
+                  label: Text(
+                    l10n.stop,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                    elevation: 4,
+                    shadowColor: Colors.red.withValues(alpha: 0.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                elevation: 4,
-                shadowColor: Colors.red.withValues(alpha: 0.5),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
               ),
             ),
-          ),
-        ],
-      );
-    },
+          ],
+        );
+      },
     );
   }
 }

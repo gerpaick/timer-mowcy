@@ -9,20 +9,14 @@ class TileWidget extends StatelessWidget {
   final TimerTile tile;
   final VoidCallback onTap;
 
-  const TileWidget({
-    super.key,
-    required this.tile,
-    required this.onTap,
-  });
+  const TileWidget({super.key, required this.tile, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 6,
       shadowColor: Color(tile.colorValue).withValues(alpha: 0.4),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -39,10 +33,16 @@ class TileWidget extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 // Oblicz optymalny rozmiar czcionki bazując na dostępnej przestrzeni
-                final nameSize = (constraints.maxWidth * 0.22).clamp(14.0, 28.0);
-                final timeSize = (constraints.maxWidth * 0.18).clamp(12.0, 22.0);
+                final nameSize = (constraints.maxWidth * 0.22).clamp(
+                  14.0,
+                  28.0,
+                );
+                final timeSize = (constraints.maxWidth * 0.18).clamp(
+                  12.0,
+                  22.0,
+                );
                 final spacing = (constraints.maxHeight * 0.06).clamp(4.0, 8.0);
-                
+
                 return Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: constraints.maxWidth * 0.08,

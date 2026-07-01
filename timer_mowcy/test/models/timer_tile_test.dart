@@ -29,7 +29,12 @@ void main() {
         colorValue: 0xFF0000FF,
       );
       final json = tile.toJson();
-      expect(json.keys.toSet(), {'id', 'name', 'durationSeconds', 'colorValue'});
+      expect(json.keys.toSet(), {
+        'id',
+        'name',
+        'durationSeconds',
+        'colorValue',
+      });
       expect(json['id'], 'x');
       expect(json['durationSeconds'], 60);
     });
@@ -37,15 +42,12 @@ void main() {
 
   group('TimerTile.formattedTime', () {
     test('formats seconds as MM:SS with zero-padding', () {
-      TimerTile tile({
-        required int durationSeconds,
-      }) =>
-          TimerTile(
-            id: '0',
-            name: 'x',
-            durationSeconds: durationSeconds,
-            colorValue: 0,
-          );
+      TimerTile tile({required int durationSeconds}) => TimerTile(
+        id: '0',
+        name: 'x',
+        durationSeconds: durationSeconds,
+        colorValue: 0,
+      );
 
       expect(tile(durationSeconds: 0).formattedTime, '00:00');
       expect(tile(durationSeconds: 1).formattedTime, '00:01');

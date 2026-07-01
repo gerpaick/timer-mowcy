@@ -20,19 +20,23 @@ void main() {
     String name = 'A',
     int durationSeconds = 60,
     int colorValue = 0xFF0000FF,
-  }) =>
-      TimerTile(
-        id: id,
-        name: name,
-        durationSeconds: durationSeconds,
-        colorValue: colorValue,
-      );
+  }) => TimerTile(
+    id: id,
+    name: name,
+    durationSeconds: durationSeconds,
+    colorValue: colorValue,
+  );
 
   group('StorageService tiles', () {
     test('saveTiles then loadTiles round-trips data', () async {
       final tiles = [
         makeTile(id: '1', name: 'Short', durationSeconds: 60),
-        makeTile(id: '2', name: 'Long', durationSeconds: 600, colorValue: 0xFFFF0000),
+        makeTile(
+          id: '2',
+          name: 'Long',
+          durationSeconds: 600,
+          colorValue: 0xFFFF0000,
+        ),
       ];
 
       await StorageService.saveTiles(tiles);
@@ -53,15 +57,18 @@ void main() {
       expect(loaded, isEmpty);
     });
 
-    test('corrupted JSON in timer_tiles key returns empty list gracefully', () async {
-      // Inject a corrupt JSON string directly into the mock store.
-      SharedPreferences.setMockInitialValues(<String, Object>{
-        'timer_tiles': 'this is {not valid] json',
-      });
+    test(
+      'corrupted JSON in timer_tiles key returns empty list gracefully',
+      () async {
+        // Inject a corrupt JSON string directly into the mock store.
+        SharedPreferences.setMockInitialValues(<String, Object>{
+          'timer_tiles': 'this is {not valid] json',
+        });
 
-      final loaded = await StorageService.loadTiles();
-      expect(loaded, isEmpty);
-    });
+        final loaded = await StorageService.loadTiles();
+        expect(loaded, isEmpty);
+      },
+    );
 
     test('deleteTile removes the matching id and keeps the rest', () async {
       await StorageService.saveTiles([
@@ -89,10 +96,13 @@ void main() {
   });
 
   group('StorageService vibrationEnabled', () {
-    test('saveVibrationEnabled(false) then loadVibrationEnabled is false', () async {
-      await StorageService.saveVibrationEnabled(false);
-      expect(await StorageService.loadVibrationEnabled(), isFalse);
-    });
+    test(
+      'saveVibrationEnabled(false) then loadVibrationEnabled is false',
+      () async {
+        await StorageService.saveVibrationEnabled(false);
+        expect(await StorageService.loadVibrationEnabled(), isFalse);
+      },
+    );
 
     test('loadVibrationEnabled defaults to true when unset', () async {
       expect(await StorageService.loadVibrationEnabled(), isTrue);
@@ -100,10 +110,13 @@ void main() {
   });
 
   group('StorageService showResetButton', () {
-    test('saveShowResetButton(false) then loadShowResetButton is false', () async {
-      await StorageService.saveShowResetButton(false);
-      expect(await StorageService.loadShowResetButton(), isFalse);
-    });
+    test(
+      'saveShowResetButton(false) then loadShowResetButton is false',
+      () async {
+        await StorageService.saveShowResetButton(false);
+        expect(await StorageService.loadShowResetButton(), isFalse);
+      },
+    );
 
     test('loadShowResetButton defaults to true when unset', () async {
       expect(await StorageService.loadShowResetButton(), isTrue);
@@ -111,10 +124,13 @@ void main() {
   });
 
   group('StorageService showPauseButton', () {
-    test('saveShowPauseButton(false) then loadShowPauseButton is false', () async {
-      await StorageService.saveShowPauseButton(false);
-      expect(await StorageService.loadShowPauseButton(), isFalse);
-    });
+    test(
+      'saveShowPauseButton(false) then loadShowPauseButton is false',
+      () async {
+        await StorageService.saveShowPauseButton(false);
+        expect(await StorageService.loadShowPauseButton(), isFalse);
+      },
+    );
 
     test('loadShowPauseButton defaults to true when unset', () async {
       expect(await StorageService.loadShowPauseButton(), isTrue);

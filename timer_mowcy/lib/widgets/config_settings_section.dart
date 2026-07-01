@@ -104,10 +104,7 @@ class ConfigSettingsSection extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   l10n.buttonVisibilitySubtitle,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 const SizedBox(height: 16),
                 SwitchListTile(

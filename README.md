@@ -1,5 +1,17 @@
 # TimerMówcy ⏱️
 
+<p align="center">
+  <img src="timer_mowcy/assets/icon_source.png" width="120" alt="TimerMówcy app icon" />
+</p>
+
+<p align="center">
+  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" /></a>
+  <a href="https://flutter.dev"><img alt="Flutter" src="https://img.shields.io/badge/Flutter-3.35-02569B?logo=flutter&logoColor=white" /></a>
+  <a href="https://developer.android.com/about/versions/nougat"><img alt="Android" src="https://img.shields.io/badge/Android-7.0%2B-3DDC84?logo=android&logoColor=white" /></a>
+  <img alt="Tests" src="https://img.shields.io/badge/tests-52%20passing-success" />
+  <img alt="Languages" src="https://img.shields.io/badge/i18n-PL%20%2B%20EN-2ea44f" />
+</p>
+
 > Open-source timer + stopwatch for speakers, trainers, and debaters.
 > Works offline. No ads. No accounts. No internet permission.
 
@@ -14,7 +26,7 @@
 - 📱 **True fullscreen landscape** — system bars hidden for maximum visibility
 - 🌗 **Light / Dark / System theme** toggle
 - 🚫 **100% offline** — no internet permission, no accounts, no telemetry
-- 🌍 **PL + EN localization** (Polish native, English full translation in progress)
+- 🌍 **PL + EN localization** (Polish native, English complete)
 
 ## 📸 Screenshots
 
@@ -46,6 +58,8 @@ adb install app-arm64-v8a-release.apk
 ```
 
 Or transfer the APK to your phone and install it (enable "Install unknown apps" first).
+
+> Which APK? Pick `app-arm64-v8a-release.apk` for modern phones (99% of devices sold after 2017). Use `app-armeabi-v7a-release.apk` only for old 32-bit devices. `app-x86_64-release.apk` is for emulators.
 
 ### From source
 
@@ -79,7 +93,7 @@ Output: `timer_mowcy/build/app/outputs/flutter-apk/`.
 ## 🧪 Testing
 
 ```bash
-flutter test              # run unit + widget tests
+flutter test              # run unit + widget tests (52 tests)
 flutter test --coverage   # generate coverage/lcov.info
 flutter analyze           # static analysis (should report "No issues found!")
 ```
@@ -92,12 +106,13 @@ flutter analyze           # static analysis (should report "No issues found!")
 | [`flutter_colorpicker`](https://pub.dev/packages/flutter_colorpicker)    | Tile color picker              |
 | [`wakelock_plus`](https://pub.dev/packages/wakelock_plus)                | Keep screen awake during timer |
 | [`vibration`](https://pub.dev/packages/vibration)                        | Haptic feedback on time-up     |
-| [`flutter_localizations`](https://pub.dev/packages/flutter_localizations) | i18n infrastructure (planned)  |
+| [`flutter_localizations`](https://pub.dev/packages/flutter_localizations) | i18n infrastructure            |
+| [`intl`](https://pub.dev/packages/intl)                                  | Locale-aware formatting        |
 
 ## 🌍 Languages
 
 - **Polski (PL)** — native, complete
-- **English (EN)** — full translation in progress
+- **English (EN)** — complete
 
 To use the app in English, change your device language or pass `--locale=en` to `flutter run`.
 
@@ -107,14 +122,38 @@ To use the app in English, change your device language or pass `--locale=en` to 
 timer_mowcy/
 ├── lib/
 │   ├── main.dart                    # Entry point + MaterialApp
+│   ├── l10n/                        # PL + EN ARB files + generated code
 │   ├── screens/                     # Home, Timer, Stopwatch, Config
 │   ├── widgets/                     # TileWidget, TimeDisplay, ActionButtons
+│   │                                # + ConfigSettingsSection/Form/TileList
 │   ├── models/                      # TimerTile
-│   └── services/                    # Controllers + StorageService
-├── test/                            # Unit + widget tests
-└── docs/
-    └── dev-history/                 # Historical dev artifacts (PL)
+│   └── services/                    # TimerController, StopwatchController,
+│                                    # StorageService
+├── test/                            # 52 unit + widget tests
+└── assets/                          # Source app icon (1024x1024)
 ```
+
+## 🗺️ Roadmap
+
+- 📸 Add screenshots + GIF demo to README
+- 🎭 Adaptive icon variants (separate foreground + background layers)
+- 🔍 More translations (DE, FR, ES — contributions welcome)
+- 🤖 GitHub Actions CI (see `.github/workflows/ci.yml`)
+- 📋 Optional: F-Droid submission
+
+## 🙏 Acknowledgments
+
+Built with these excellent open-source packages:
+
+- [Flutter](https://flutter.dev) — UI toolkit
+- [`shared_preferences`](https://pub.dev/packages/shared_preferences)
+- [`flutter_colorpicker`](https://pub.dev/packages/flutter_colorpicker)
+- [`wakelock_plus`](https://pub.dev/packages/wakelock_plus)
+- [`vibration`](https://pub.dev/packages/vibration)
+
+## 👤 Author
+
+**Gerard Rakoczy** — [GitHub profile](https://github.com/gerpaick)
 
 ## 🤝 Contributing
 

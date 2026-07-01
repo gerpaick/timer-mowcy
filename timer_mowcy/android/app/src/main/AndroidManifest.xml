@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     
     <application
-        android:label="timer_mowcy"
+        android:label="TimerMówcy"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

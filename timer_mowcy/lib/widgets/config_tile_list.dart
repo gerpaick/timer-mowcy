@@ -32,10 +32,7 @@ class ConfigTileList extends StatelessWidget {
           children: [
             Text(
               l10n.tileListTitle(tiles.length),
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             if (tiles.isEmpty)

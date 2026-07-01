@@ -14,10 +14,7 @@ import '../widgets/action_buttons.dart';
 class TimerScreen extends StatefulWidget {
   final TimerTile tile;
 
-  const TimerScreen({
-    super.key,
-    required this.tile,
-  });
+  const TimerScreen({super.key, required this.tile});
 
   @override
   State<TimerScreen> createState() => _TimerScreenState();
@@ -35,13 +32,13 @@ class _TimerScreenState extends State<TimerScreen> {
     super.initState();
     // Utwórz kontroler i rozpocznij odliczanie
     _controller = TimerController();
-    
+
     // Konwertuj colorValue na Color
     _tileColor = Color(widget.tile.colorValue);
-    
+
     // Włącz keep screen on (ekran nie gaśnie)
     WakelockPlus.enable();
-    
+
     // Załaduj ustawienia
     _loadSettings();
   }
@@ -61,17 +58,17 @@ class _TimerScreenState extends State<TimerScreen> {
     });
 
     // Automatycznie rozpocznij odliczanie z ustawieniem wibracji
-    _controller.start(widget.tile.durationSeconds, vibrationEnabled: _vibrationEnabled);
+    _controller.start(
+      widget.tile.durationSeconds,
+      vibrationEnabled: _vibrationEnabled,
+    );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Wymuszaj full screen za każdym razem gdy ekran się wyświetla
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.immersive,
-      overlays: [],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
   }
 
   @override
@@ -85,7 +82,10 @@ class _TimerScreenState extends State<TimerScreen> {
   // Obsługa Reset
   void _handleReset() {
     _controller.reset(vibrationEnabled: _vibrationEnabled);
-    _controller.start(widget.tile.durationSeconds, vibrationEnabled: _vibrationEnabled);
+    _controller.start(
+      widget.tile.durationSeconds,
+      vibrationEnabled: _vibrationEnabled,
+    );
   }
 
   // Obsługa Pauza/Wznów
@@ -107,7 +107,7 @@ class _TimerScreenState extends State<TimerScreen> {
         builder: (context, constraints) {
           // Responsywny layout dla landscape
           final isWide = constraints.maxWidth > 800;
-          
+
           return Row(
             children: [
               // Lewa strona - Przyciski (35% szerokości na małych ekranach)
@@ -131,7 +131,7 @@ class _TimerScreenState extends State<TimerScreen> {
                   ),
                 ),
               ),
-              
+
               // Prawa strona - Wyświetlacz czasu (65% szerokości na małych ekranach)
               Expanded(
                 flex: isWide ? 3 : 3,
@@ -157,4 +157,3 @@ class _TimerScreenState extends State<TimerScreen> {
     );
   }
 }
-

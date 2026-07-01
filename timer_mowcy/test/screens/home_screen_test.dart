@@ -15,7 +15,10 @@ import 'package:timer_mowcy/widgets/tile_widget.dart';
 /// Wraps [child] in a MaterialApp configured with the app's localization
 /// delegates and forced to Polish (the template/native locale) so the screen
 /// text is deterministic in tests.
-Widget _localizedApp({required Widget home, List<NavigatorObserver>? observers}) {
+Widget _localizedApp({
+  required Widget home,
+  List<NavigatorObserver>? observers,
+}) {
   return MaterialApp(
     locale: const Locale('pl'),
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -79,17 +82,17 @@ void main() {
     String id = 't1',
     String name = 'TEST',
     int durationSeconds = 300,
-  }) =>
-      TimerTile(
-        id: id,
-        name: name,
-        durationSeconds: durationSeconds,
-        colorValue: Colors.green.toARGB32(),
-      );
+  }) => TimerTile(
+    id: id,
+    name: name,
+    durationSeconds: durationSeconds,
+    colorValue: Colors.green.toARGB32(),
+  );
 
   group('HomeScreen tile rendering', () {
-    testWidgets('renders the stopwatch tile plus user tiles from storage',
-        (tester) async {
+    testWidgets('renders the stopwatch tile plus user tiles from storage', (
+      tester,
+    ) async {
       mockSystemChannels(tester);
       seedStorage([
         userTile(id: 't1', name: 'A', durationSeconds: 60),
@@ -111,12 +114,12 @@ void main() {
       expect(observer.pushCount, 1);
     });
 
-    testWidgets('with empty storage shows a single STOPER tile', (tester) async {
+    testWidgets('with empty storage shows a single STOPER tile', (
+      tester,
+    ) async {
       mockSystemChannels(tester);
 
-      await tester.pumpWidget(
-        _localizedApp(home: const HomeScreen()),
-      );
+      await tester.pumpWidget(_localizedApp(home: const HomeScreen()));
       await tester.pumpAndSettle();
 
       expect(find.text('STOPER'), findsOneWidget);
@@ -144,8 +147,9 @@ void main() {
       expect(observer.pushCount, 2);
     });
 
-    testWidgets('tapping the gear icon triggers config navigation',
-        (tester) async {
+    testWidgets('tapping the gear icon triggers config navigation', (
+      tester,
+    ) async {
       mockSystemChannels(tester);
 
       final observer = _PushCountingObserver();

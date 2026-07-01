@@ -12,13 +12,13 @@ import 'services/storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Ustaw orientację poziomą dla całej aplikacji
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  
+
   // Ukryj pasek systemowy i ustaw prawdziwy pełny ekran
   // immersive zamiast immersiveSticky - belki nie wracają po geście
   await SystemChrome.setEnabledSystemUIMode(

@@ -51,8 +51,9 @@ void main() {
   }
 
   group('TimerController.start', () {
-    testWidgets('start(60) sets state to running and remainingSeconds to 60',
-        (tester) async {
+    testWidgets('start(60) sets state to running and remainingSeconds to 60', (
+      tester,
+    ) async {
       final c = TimerController();
       c.start(60);
       expect(c.state, TimerState.running);
@@ -63,15 +64,17 @@ void main() {
       c.dispose();
     });
 
-    testWidgets('after 2 seconds of running, state is running and remaining is 58',
-        (tester) async {
-      final c = TimerController();
-      c.start(60);
-      await tester.pump(const Duration(seconds: 2));
-      expect(c.state, TimerState.running);
-      expect(c.remainingSeconds, 58);
-      c.dispose();
-    });
+    testWidgets(
+      'after 2 seconds of running, state is running and remaining is 58',
+      (tester) async {
+        final c = TimerController();
+        c.start(60);
+        await tester.pump(const Duration(seconds: 2));
+        expect(c.state, TimerState.running);
+        expect(c.remainingSeconds, 58);
+        c.dispose();
+      },
+    );
   });
 
   group('TimerController.pauseResume', () {
@@ -118,24 +121,26 @@ void main() {
   });
 
   group('TimerController.reset', () {
-    testWidgets('sets state to idle and remainingSeconds back to initialSeconds',
-        (tester) async {
-      final c = TimerController();
-      c.start(60);
-      await tester.pump(const Duration(seconds: 10)); // -> 50
-      expect(c.remainingSeconds, 50);
+    testWidgets(
+      'sets state to idle and remainingSeconds back to initialSeconds',
+      (tester) async {
+        final c = TimerController();
+        c.start(60);
+        await tester.pump(const Duration(seconds: 10)); // -> 50
+        expect(c.remainingSeconds, 50);
 
-      c.reset();
-      expect(c.state, TimerState.idle);
-      expect(c.isIdle, isTrue);
-      expect(c.remainingSeconds, 60);
-      expect(c.initialSeconds, 60);
+        c.reset();
+        expect(c.state, TimerState.idle);
+        expect(c.isIdle, isTrue);
+        expect(c.remainingSeconds, 60);
+        expect(c.initialSeconds, 60);
 
-      // No further ticks after reset.
-      await tester.pump(const Duration(seconds: 5));
-      expect(c.remainingSeconds, 60);
-      c.dispose();
-    });
+        // No further ticks after reset.
+        await tester.pump(const Duration(seconds: 5));
+        expect(c.remainingSeconds, 60);
+        c.dispose();
+      },
+    );
   });
 
   group('TimerController.stop', () {
@@ -156,18 +161,20 @@ void main() {
   });
 
   group('TimerController overdue', () {
-    testWidgets('start(0) followed by a tick produces isOverdue and negative remaining',
-        (tester) async {
-      final c = TimerController();
-      c.start(0);
-      expect(c.remainingSeconds, 0);
-      expect(c.isOverdue, isFalse);
+    testWidgets(
+      'start(0) followed by a tick produces isOverdue and negative remaining',
+      (tester) async {
+        final c = TimerController();
+        c.start(0);
+        expect(c.remainingSeconds, 0);
+        expect(c.isOverdue, isFalse);
 
-      await tester.pump(const Duration(seconds: 1));
-      expect(c.remainingSeconds, -1);
-      expect(c.isOverdue, isTrue);
-      c.dispose();
-    });
+        await tester.pump(const Duration(seconds: 1));
+        expect(c.remainingSeconds, -1);
+        expect(c.isOverdue, isTrue);
+        c.dispose();
+      },
+    );
 
     testWidgets('keeps counting down past zero', (tester) async {
       final c = TimerController();
@@ -180,8 +187,9 @@ void main() {
   });
 
   group('TimerController vibration', () {
-    testWidgets('vibration is called EXACTLY ONCE when remaining hits 0',
-        (tester) async {
+    testWidgets('vibration is called EXACTLY ONCE when remaining hits 0', (
+      tester,
+    ) async {
       final c = TimerController();
       c.start(2, vibrationEnabled: true);
 
@@ -203,7 +211,9 @@ void main() {
       c.dispose();
     });
 
-    testWidgets('does not vibrate when vibrationEnabled is false', (tester) async {
+    testWidgets('does not vibrate when vibrationEnabled is false', (
+      tester,
+    ) async {
       final c = TimerController();
       c.start(1, vibrationEnabled: false);
 

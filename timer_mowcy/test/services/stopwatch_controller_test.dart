@@ -22,7 +22,9 @@ void main() {
       final c = StopwatchController();
       // Run up to the cap in a single elapse; the controller auto-pauses.
       c.start();
-      await tester.pump(const Duration(seconds: StopwatchController.maxSeconds));
+      await tester.pump(
+        const Duration(seconds: StopwatchController.maxSeconds),
+      );
       expect(c.isMaxed, isTrue);
       expect(c.state, StopwatchState.paused);
 
@@ -35,15 +37,18 @@ void main() {
   });
 
   group('StopwatchController auto-stop', () {
-    testWidgets('auto-stops at 60:00 (3600s) and pauses further ticks',
-        (tester) async {
+    testWidgets('auto-stops at 60:00 (3600s) and pauses further ticks', (
+      tester,
+    ) async {
       final c = StopwatchController();
       c.start();
 
       // Elapsing the full 60 minutes fires 3600 periodic ticks; on the 3600th
       // tick the controller sets elapsed to maxSeconds, switches to paused and
       // cancels its own timer.
-      await tester.pump(const Duration(seconds: StopwatchController.maxSeconds));
+      await tester.pump(
+        const Duration(seconds: StopwatchController.maxSeconds),
+      );
 
       expect(c.elapsedSeconds, StopwatchController.maxSeconds);
       expect(c.state, StopwatchState.paused);
@@ -71,7 +76,9 @@ void main() {
       c.dispose();
     });
 
-    testWidgets('from paused sets running and resumes counting', (tester) async {
+    testWidgets('from paused sets running and resumes counting', (
+      tester,
+    ) async {
       final c = StopwatchController();
       c.start();
       await tester.pump(const Duration(seconds: 5)); // 5

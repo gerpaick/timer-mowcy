@@ -12,13 +12,12 @@ void main() {
     String name = '5 MIN',
     int durationSeconds = 300,
     int colorValue = 0xFF2196F3,
-  }) =>
-      TimerTile(
-        id: id,
-        name: name,
-        durationSeconds: durationSeconds,
-        colorValue: colorValue,
-      );
+  }) => TimerTile(
+    id: id,
+    name: name,
+    durationSeconds: durationSeconds,
+    colorValue: colorValue,
+  );
 
   Future<void> pumpTile(
     WidgetTester tester,
@@ -47,8 +46,9 @@ void main() {
       expect(find.text('05:00'), findsOneWidget);
     });
 
-    testWidgets('renders name and formattedTime for a 10-minute tile',
-        (tester) async {
+    testWidgets('renders name and formattedTime for a 10-minute tile', (
+      tester,
+    ) async {
       final tile = makeTile(name: 'LONG', durationSeconds: 600);
       await pumpTile(tester, tile);
 
@@ -56,8 +56,9 @@ void main() {
       expect(find.text('10:00'), findsOneWidget);
     });
 
-    testWidgets('background color matches Color(tile.colorValue)',
-        (tester) async {
+    testWidgets('background color matches Color(tile.colorValue)', (
+      tester,
+    ) async {
       const argb = 0xFFD32F2F; // a distinct red
       final tile = makeTile(colorValue: argb);
       await pumpTile(tester, tile);

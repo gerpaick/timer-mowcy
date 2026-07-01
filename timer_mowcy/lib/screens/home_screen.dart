@@ -14,7 +14,7 @@ import 'config_screen.dart';
 // Ekran główny z siatką kafelków minutników
 class HomeScreen extends StatefulWidget {
   final VoidCallback? onThemeChanged;
-  
+
   const HomeScreen({super.key, this.onThemeChanged});
 
   @override
@@ -38,16 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Wymuszaj full screen za każdym razem gdy ekran się wyświetla
-    SystemChrome.setEnabledSystemUIMode(
-      SystemUiMode.immersive,
-      overlays: [],
-    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
   }
 
   // Załaduj kafelki z pamięci
   Future<void> _loadTiles() async {
     if (!mounted) return;
-    
+
     setState(() {
       _isLoading = true;
     });
@@ -56,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final tiles = await StorageService.loadTiles();
 
       if (!mounted) return;
-      
+
       setState(() {
         // Dodaj domyślny kafelek "STOPER" jeśli lista jest pusta
         if (tiles.isEmpty) {
@@ -65,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
               id: 'stopwatch',
               name: 'STOPER',
               durationSeconds: 0, // stoper nie ma limitu czasu
-                  colorValue: Colors.blue.toARGB32(),
+              colorValue: Colors.blue.toARGB32(),
             ),
           ];
         } else {
@@ -114,7 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Nawigacja do ekranu konfiguracji
                 final result = await Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => ConfigScreen(onThemeChanged: widget.onThemeChanged),
+                    builder: (context) =>
+                        ConfigScreen(onThemeChanged: widget.onThemeChanged),
                   ),
                 );
                 // Odśwież listę kafelków po powrocie z konfiguracji
@@ -127,86 +125,87 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : _tiles.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        l10n.noTiles,
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final result = await Navigator.of(context).push(
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(l10n.noTiles, style: const TextStyle(fontSize: 18)),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result = await Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ConfigScreen(
+                            onThemeChanged: widget.onThemeChanged,
+                          ),
+                        ),
+                      );
+                      // Odśwież listę kafelków po powrocie z konfiguracji
+                      if (result == true) {
+                        _refreshTiles();
+                      }
+                    },
+                    child: Text(l10n.addTilesButton),
+                  ),
+                ],
+              ),
+            )
+          : LayoutBuilder(
+              builder: (context, constraints) {
+                // Określ liczbę kolumn na podstawie orientacji i szerokości ekranu
+                // Małe ekrany (<500px): 4 kolumny
+                // Średnie/duże ekrany landscape: 5 kolumn
+                // Portrait: 4 kolumny
+                final isSmallScreen = constraints.maxWidth < 500;
+                final isLandscape =
+                    MediaQuery.of(context).orientation == Orientation.landscape;
+                final crossAxisCount = isSmallScreen
+                    ? 4
+                    : (isLandscape ? 5 : 4);
+
+                // Dostosuj spacing i aspectRatio do rozmiaru ekranu
+                final spacing = isSmallScreen ? 8.0 : 12.0;
+                final aspectRatio = isSmallScreen ? 1.0 : 1.2;
+                final padding = isSmallScreen ? 12.0 : 16.0;
+
+                return GridView.builder(
+                  padding: EdgeInsets.all(padding),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: spacing,
+                    mainAxisSpacing: spacing,
+                    childAspectRatio: aspectRatio,
+                  ),
+                  itemCount: _tiles.length,
+                  itemBuilder: (context, index) {
+                    final tile = _tiles[index];
+                    return TileWidget(
+                      tile: tile,
+                      onTap: () {
+                        // Jeśli to STOPER (durationSeconds == 0), nawiguj do ekranu stopera
+                        if (tile.id == 'stopwatch' ||
+                            tile.durationSeconds == 0) {
+                          Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => ConfigScreen(onThemeChanged: widget.onThemeChanged),
+                              builder: (context) => const StopwatchScreen(),
                             ),
                           );
-                          // Odśwież listę kafelków po powrocie z konfiguracji
-                          if (result == true) {
-                            _refreshTiles();
-                          }
-                        },
-                        child: Text(l10n.addTilesButton),
-                      ),
-                    ],
-                  ),
-                )
-              : LayoutBuilder(
-                  builder: (context, constraints) {
-                    // Określ liczbę kolumn na podstawie orientacji i szerokości ekranu
-                    // Małe ekrany (<500px): 4 kolumny
-                    // Średnie/duże ekrany landscape: 5 kolumn
-                    // Portrait: 4 kolumny
-                    final isSmallScreen = constraints.maxWidth < 500;
-                    final isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
-                    final crossAxisCount = isSmallScreen ? 4 : (isLandscape ? 5 : 4);
-                    
-                    // Dostosuj spacing i aspectRatio do rozmiaru ekranu
-                    final spacing = isSmallScreen ? 8.0 : 12.0;
-                    final aspectRatio = isSmallScreen ? 1.0 : 1.2;
-                    final padding = isSmallScreen ? 12.0 : 16.0;
-
-                    return GridView.builder(
-                      padding: EdgeInsets.all(padding),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: spacing,
-                        mainAxisSpacing: spacing,
-                        childAspectRatio: aspectRatio,
-                      ),
-                      itemCount: _tiles.length,
-                      itemBuilder: (context, index) {
-                        final tile = _tiles[index];
-                        return TileWidget(
-                          tile: tile,
-                          onTap: () {
-                            // Jeśli to STOPER (durationSeconds == 0), nawiguj do ekranu stopera
-                            if (tile.id == 'stopwatch' || tile.durationSeconds == 0) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const StopwatchScreen(),
-                                ),
-                              );
-                            } else {
-                              // Nawigacja do ekranu minutnika
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => TimerScreen(tile: tile),
-                                ),
-                              );
-                            }
-                          },
-                        );
+                        } else {
+                          // Nawigacja do ekranu minutnika
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => TimerScreen(tile: tile),
+                            ),
+                          );
+                        }
                       },
                     );
                   },
-                ),
+                );
+              },
+            ),
     );
   }
 }

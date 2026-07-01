@@ -16,7 +16,8 @@ class ConfigTileForm extends StatefulWidget {
     required String name,
     required int durationSeconds,
     required int colorValue,
-  }) onAddTile;
+  })
+  onAddTile;
   final int maxTiles;
 
   const ConfigTileForm({
@@ -161,10 +162,7 @@ class _ConfigTileFormState extends State<ConfigTileForm> {
                   decoration: BoxDecoration(
                     color: _selectedColor,
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 2,
-                    ),
+                    border: Border.all(color: Colors.grey, width: 2),
                   ),
                 ),
                 onTap: _showColorPicker,

@@ -41,13 +41,12 @@ void main() {
     String name = 'A',
     int durationSeconds = 60,
     int colorValue = 0xFF2196F3,
-  }) =>
-      TimerTile(
-        id: id,
-        name: name,
-        durationSeconds: durationSeconds,
-        colorValue: colorValue,
-      );
+  }) => TimerTile(
+    id: id,
+    name: name,
+    durationSeconds: durationSeconds,
+    colorValue: colorValue,
+  );
 
   /// Builds ten distinct tiles (1..10 minutes) for the 10-tile-limit scenario.
   List<TimerTile> tenTiles() {
@@ -62,30 +61,32 @@ void main() {
   }
 
   group('ConfigScreen add tile', () {
-    testWidgets('submitting the form with valid name + minutes persists a tile',
-        (tester) async {
-      await tester.pumpWidget(_localizedApp(const ConfigScreen()));
-      await tester.pumpAndSettle();
+    testWidgets(
+      'submitting the form with valid name + minutes persists a tile',
+      (tester) async {
+        await tester.pumpWidget(_localizedApp(const ConfigScreen()));
+        await tester.pumpAndSettle();
 
-      // Two TextFormField widgets: name (index 0) and minutes (index 1).
-      final fields = find.byType(TextFormField);
-      expect(fields, findsNWidgets(2));
+        // Two TextFormField widgets: name (index 0) and minutes (index 1).
+        final fields = find.byType(TextFormField);
+        expect(fields, findsNWidgets(2));
 
-      await tester.enterText(fields.at(0), 'MOJ KAFELEK');
-      await tester.enterText(fields.at(1), '5');
-      await tester.pump();
+        await tester.enterText(fields.at(0), 'MOJ KAFELEK');
+        await tester.enterText(fields.at(1), '5');
+        await tester.pump();
 
-      // The config screen scrolls; bring the button into view before tapping.
-      final addButton = find.widgetWithText(ElevatedButton, 'Dodaj kafelek');
-      await tester.ensureVisible(addButton);
-      await tester.tap(addButton);
-      await tester.pumpAndSettle();
+        // The config screen scrolls; bring the button into view before tapping.
+        final addButton = find.widgetWithText(ElevatedButton, 'Dodaj kafelek');
+        await tester.ensureVisible(addButton);
+        await tester.tap(addButton);
+        await tester.pumpAndSettle();
 
-      // Verify the side effect via storage.
-      final persisted = await StorageService.loadTiles();
-      final added = persisted.firstWhere((t) => t.name == 'MOJ KAFELEK');
-      expect(added.durationSeconds, 300);
-    });
+        // Verify the side effect via storage.
+        final persisted = await StorageService.loadTiles();
+        final added = persisted.firstWhere((t) => t.name == 'MOJ KAFELEK');
+        expect(added.durationSeconds, 300);
+      },
+    );
 
     testWidgets('empty name is rejected by the validator', (tester) async {
       await tester.pumpWidget(_localizedApp(const ConfigScreen()));
@@ -108,8 +109,9 @@ void main() {
   });
 
   group('ConfigScreen 10-tile limit', () {
-    testWidgets('blocks adding an 11th tile when 10 already exist',
-        (tester) async {
+    testWidgets('blocks adding an 11th tile when 10 already exist', (
+      tester,
+    ) async {
       seedStorage(tenTiles());
 
       await tester.pumpWidget(_localizedApp(const ConfigScreen()));
@@ -138,8 +140,9 @@ void main() {
   });
 
   group('ConfigScreen delete tile', () {
-    testWidgets('tapping the delete icon then confirming removes the tile',
-        (tester) async {
+    testWidgets('tapping the delete icon then confirming removes the tile', (
+      tester,
+    ) async {
       seedStorage([
         tile(id: 'keep', name: 'KEEP', durationSeconds: 60),
         tile(id: 'drop', name: 'DROP', durationSeconds: 120),
@@ -153,8 +156,14 @@ void main() {
       expect(deleteIcons, findsNWidgets(2));
 
       // Tap the delete icon on the row showing "DROP".
-      final dropRow = find.ancestor(of: find.text('DROP'), matching: find.byType(ListTile));
-      final dropDelete = find.descendant(of: dropRow, matching: find.byIcon(Icons.delete));
+      final dropRow = find.ancestor(
+        of: find.text('DROP'),
+        matching: find.byType(ListTile),
+      );
+      final dropDelete = find.descendant(
+        of: dropRow,
+        matching: find.byIcon(Icons.delete),
+      );
       await tester.ensureVisible(dropDelete);
       await tester.tap(dropDelete);
       await tester.pumpAndSettle();

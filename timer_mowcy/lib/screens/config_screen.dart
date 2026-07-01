@@ -38,11 +38,14 @@ class _ConfigScreenState extends State<ConfigScreen> {
   }
 
   // Wyświetl SnackBar (zabezpieczony sprawdzaniem `mounted`).
-  void _snackbar(String message, {Duration duration = const Duration(seconds: 1)}) {
+  void _snackbar(
+    String message, {
+    Duration duration = const Duration(seconds: 1),
+  }) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), duration: duration),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message), duration: duration));
   }
 
   // Załaduj kafelki i ustawienia
@@ -62,7 +65,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
     if (!mounted) return;
     setState(() {
       // Filtr kafelków - wyklucz STOPER (id: 'stopwatch')
-      _tiles = (results[0] as List<TimerTile>).where((tile) => tile.id != 'stopwatch').toList();
+      _tiles = (results[0] as List<TimerTile>)
+          .where((tile) => tile.id != 'stopwatch')
+          .toList();
       _tiles.sort((a, b) => a.durationSeconds.compareTo(b.durationSeconds));
       _vibrationEnabled = results[1] as bool;
       _themeMode = results[2] as String;
@@ -204,7 +209,9 @@ class _ConfigScreenState extends State<ConfigScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop(true); // Zwróć true aby odświeżyć home screen
+            Navigator.of(
+              context,
+            ).pop(true); // Zwróć true aby odświeżyć home screen
           },
         ),
       ),
@@ -231,10 +238,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                     onAddTile: _addTileFromForm,
                   ),
                   const SizedBox(height: 24),
-                  ConfigTileList(
-                    tiles: _tiles,
-                    onDeleteTile: _deleteTile,
-                  ),
+                  ConfigTileList(tiles: _tiles, onDeleteTile: _deleteTile),
                 ],
               ),
             ),
