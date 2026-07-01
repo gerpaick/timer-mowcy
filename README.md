@@ -30,9 +30,13 @@
 
 ## 📸 Screenshots
 
-<!-- TODO: add screenshots/01-home.png, 02-timer-overdue.png, 03-config.png -->
+| Home (empty) | Home with tiles | Stopwatch |
+| :---: | :---: | :---: |
+| <img src="screenshots/main-screen.png" alt="Home screen empty" width="320" /> | <img src="screenshots/main-with-tiles.png" alt="Home with timer tiles" width="320" /> | <img src="screenshots/stopper.png" alt="Stopwatch running" width="320" /> |
 
-_Screenshots will be added in a follow-up commit._
+| Timer countdown | Settings | Add tile form |
+| :---: | :---: | :---: |
+| <img src="screenshots/countdown.png" alt="Timer counting down" width="320" /> | <img src="screenshots/main-settings.png" alt="Settings screen" width="320" /> | <img src="screenshots/settings-add-tiles.png" alt="Add tile form" width="320" /> |
 
 ## ❓ Why?
 
